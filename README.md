@@ -139,7 +139,7 @@ Next inside powershell type "ping 10.0.0.5" which is VM2's private IP address to
 ![Screenshot (176)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/68f5dd85-436e-4c2c-aad4-f731035d074e)
 
 
-Next go back to Microsoft Azure and open up VM2's Network Settings, Then click on create port rule, the n select Inbound rule.
+Next go back to Microsoft Azure and open up VM2's Network Settings, Then click on create port rule, then select Inbound rule.
 
 
 ![Screenshot (177)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/8df1fc94-85d5-41a6-b1c4-9a100538fbe2)
