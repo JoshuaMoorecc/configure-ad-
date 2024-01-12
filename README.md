@@ -1,17 +1,13 @@
 <p align="center">
 
-![Microsoft_Azure-Logo wine](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/0cc402a9-a0f7-4889-9303-65eade1ac965)
+![active-directory-logo](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/45a67b0d-c885-41bf-a466-ec8e134ed436)
 
 
 </p>
 
-<h1> Creating Virtual Machines </h1>
+<h1> On-premises Active Directory Deployed in the Cloud (Azure) </h1>
 This tutorial outlines the implementation of Active Directory within Azure Virtual Machines.<br />
 
-
-<h2>Video Demonstration</h2>
-
-- ### [YouTube: How to Deploy on-premises Active Directory within Azure Compute](https://www.youtube.com)
 
 <h2>Environments and Technologies Used</h2>
 
@@ -29,150 +25,150 @@ This tutorial outlines the implementation of Active Directory within Azure Virtu
 
 <p>
 
-![Screenshot (155)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/978d348f-0437-4c81-b076-603e38f85fef)
 
 
+![Screenshot (199)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/640402a1-f2b0-4a2e-b303-ae25faed5daf)
 
-![Screenshot (157)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/c0269eed-1a60-4856-bcc5-67e518c20647)
-
-
-</p>
-<p>
-First step is to have an Microsoft Azure subscription active to create resource groups in. Then we will create a resoucre group that the virtual machine will be connected to it will be named VM1.
-</p>
-<br />
-
-<p>
-
-![Screenshot (158)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/4b6b8427-8266-4571-99d1-cd598b4a4454)
-
-
-
-![Screenshot (160)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/504955f2-cd3c-4034-8d42-6b85c8e6be76)
 
 
 
 </p>
 <p>
   
- Next we will create another virtual machine and we will name it VM2
-  
+In Microsoft Azure, create two virtual machines that run on Windows 10 (Client-1) and Windows Server (Domain Controller or DC). In the virtual machines, I made sure to keep the region, virtual machine size, and virtual network (vnet) were the same to ensure that both machines are running on the same resources to communicate and drive traffic.
+
+
 </p>
 <br />
 
 <p>
 
-![Screenshot (161)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/7d7611e1-088e-4ac8-b0c3-895a3a5a1b30)
+![Screenshot (205)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/09462f5b-3850-4d69-9d61-9d0d2980652a)
+
+
+</p>
+<p>
+
+After creating the virtual machines, change the Domain Controller's (DC) Network Interface (NIC) to static inside of Microsoft Azure. I have toggled to Networking under the DC-virtal machine --> Click on the virtual NIC --> Click on IP configurations --> Edit the assignment to "Static" --> Click on Save. Changing the NIC to static allows the IP address to stay the same and not change if a computer pulls the IP address.
+
+
+
+</p>
+<br />
+
+<p>
+
+
+![Course - CourseCareers - Opera 1_12_2024 12_54_23 PM](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/b1551fe1-3d2e-4351-b99a-c76dfef242d8)
 
 
   
 </p>
 <p>
-Make sure that that VM1 and VM2 are sharing the same VNET.
+After creating both machines, this will be the topology to showcase how both machines were running from the same Vnet and subnet mask. Also, we can see that each virtual machine has its own IP addresses and network security groups.
 </p>
 <br />
 
-![Screenshot (163)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/3913e1f1-33af-421c-b274-e99ab49d0f35)
 
 
-Next copy the public IP address of VM1 and open up Remote Desktop.
 
+<h1> Reviewing Connectivity between DC and Client 1 </h1>
 
-![Screenshot (165)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/ebc2fc7f-627b-433c-ada2-e68654efb09c)
+![Screenshot (210)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/d5230fb1-2d30-4ee4-9b8f-1e2f5d9f0d76)
 
+![20 150 223 237 - Remote Desktop Connection 1_11_2024 3_34_47 PM](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/75c09921-de75-4507-95f8-6758d0922ea6)
 
-With the credentails that you used  when setting up the VM1, imput the IP address and password and long in to RDT
 
 
-![Screenshot (166)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/5419245b-54e4-4011-8e8a-3d2acb7f1053)
 
 
-Next once the home screen loads, open up the browser and download wireshark
+After logging into the DC and Client 1, complete a perpetual ping to DC's prviate IP address on Client 1 to observe the connectivity. The connectivity has failed due to DC's firewall blocking the ICMP protocols. Thus, go back to the DC remote desktop and enabled the ICMP4s protocols for "Echo Request" for the pings to respond. After enabling the ICMP4 protocol, toggle back to Client 1 to review that the ping to DC's private IP address was successful.
 
 
-![Screenshot (167)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/0a90d2ac-e8ac-44c0-a75d-80b0a8cafe67)
+<h1> Install Active Directory </h1>
 
+![20 169 104 33 - Remote Desktop Connection 1_11_2024 3_37_35 PM](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/fb6dff8d-b83e-410c-8af7-b836ad7d92e3)
 
-Go to the start menu and look up wireshark and run the instalation.
 
+After reviewing the connectivity between both machines, install Active Directory on the domain controller by opening Server Manager --> Clicking on "Tools" --> Clicking on "Active Directory Users and Computers" --> Clicking on "Add Roles and Features" and starting the setup wizard. Under "Server Roles", select "Active Directory Domain Services" and complete the remainder of the setup wizard. Once the installation is complete, the notifications flag will have a hazard notification next to it.
 
-![Screenshot (168)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/01c52a12-3534-4042-bd38-4049330e1d4e)
 
 
-![Screenshot (169)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/f66756d0-2251-4209-9cba-97907aa07252)
+<h1> Continue Installing Active Directory </h1>
 
 
-Click on next to continue running the program
 
+![20 169 104 33 - Remote Desktop Connection 1_11_2024 3_43_29 PM](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/b471f045-be68-40dc-b28b-87676ee37b84)
 
 
-![Screenshot (170)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/22dabd2d-6fc8-4dd1-a2cb-b055301ab2b3)
 
+After clicking on the notification flag, click on "Promote this server to a domain controller" to continue setup of the Active Directory. Next in the Deployment Confirguration Wizard, select "Add a new forest" and create a domain name. Continue to install and setup in the configuration wizard and ensure to allow the "NETBIOS" to load with previously created domain name. After the installation is complete, DC will restart itself and sign back in with DC VM login credentials.
 
-Once wireshark opens, click on the shark fin in the top left corner
 
 
+<h1> Create Administrator and User Accounts in Active Directory </h1>
 
+![20 169 104 33 - Remote Desktop Connection 1_11_2024 4_06_31 PM](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/8cf3d19c-67d8-4618-b41f-19dcc7a33573)
 
-![Screenshot (171)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/9183a0c4-008c-489b-a0b7-64b77b2096bc)
 
 
-Once you are able to see inbound traffice through wireshark, click in to the address bar and type ICMP and hit enter.
+After logging in, open Server Manager and toggle to "Active Directory Users and Computers" --> right-click under "domain.com" --> Click on "New" and "Organizational Unit" to create "ADMINS" and "EMPLOYEES folders in Active Directory. Once the "Admin" folder is created, right-click on "New" and "User" to add "Jane Doe" to user group.
 
 
-![Screenshot (172)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/8f55ddfb-2e4d-4626-abbe-fcb15959137d)
 
+<h1> Continue creating Administrator and User Accounts in Active Directory </h1>
 
-Once you have only allowed CIMP traffic only, go to the search bar and type in powershell and hit enter, Powershell should open up.
 
+![20 169 104 33 - Remote Desktop Connection 1_11_2024 4_19_47 PM](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/0c513a1a-2e33-47bc-856c-c73f11cff82a)
 
-![Screenshot (174)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/78791a26-2290-49c5-921b-3c5cc16750bf) 
 
 
-Next inside powershell type "ping 10.0.0.5" which is VM2's private IP address to see if we get any traffic response.
+Once "Jane Doe has been created, add "Jane Doe" to the "Domain Admins" group to allow access to login as an administrator. Next, log out and login back in as "Jane Doe" under "domain.com\createdjanedoeuser and use the account to continue to join client 1 with the DC.
 
 
+<h1> Join Client 1 to Domain Controller </h1>
 
-![Screenshot (175)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/75de383b-1d03-4ba9-bad4-29f06c713b2b)
+![Screenshot (216)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/ab625d9b-34ec-4510-8708-701d4ebe4ea8)
 
 
-![Screenshot (176)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/68f5dd85-436e-4c2c-aad4-f731035d074e)
+After logging back in DC as "Jane Doe", toggle back to DC in Microsoft Azure portal and change the DNS server settings. First, copy the DC's private IP address. Click on the Client Virtual Machine and click on "Networking" --> Click on the virtual NIC --> Click on DNS server --> Click on "Custom" and paste DC's private IP address --> Click on "Save. Next, Client 1 will restart itself and log back in to Client 1.
 
 
-Next go back to Microsoft Azure and open up VM2's Network Settings, Then click on create port rule, then select Inbound rule.
+<h1> Continue joining Client 1 to Domain Controller </h1>
 
+![20 150 223 237 - Remote Desktop Connection 1_11_2024 4_50_39 PM](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/f44ed9eb-9953-4174-a986-03eb9628fe43)
 
-![Screenshot (177)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/8df1fc94-85d5-41a6-b1c4-9a100538fbe2)
 
+Next, remote desktop into Client 1 and open System properties. Right-click on "Windows" --> click on System --> Select "Rename this PC", --> click on "Change" for "Rename this computer or change its domain" --> Select "domain", add "domain.com", and select "OK" to add domain. Next, verify that Client 1 displays under "Computers" folder in Server Manager on the Domain Contoller.
 
-![Screenshot (178)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/af9fe199-3aa9-4a3f-b90f-d8ad020fa1cf)
 
+<h1> Setup Remote Desktop to Non-Administrative Users </h1>
 
-Leave everything the same but change the protocol to ICMP, Action to Deny, Prioty 200, and name to DENY_ICMP_PING_FROM_ANYWHERE then click add
+![20 150 223 237 - Remote Desktop Connection 1_11_2024 4_58_19 PM](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/7ca1d941-727d-420a-9f56-72e9cd2a2c36)
 
 
 
-![Screenshot (180)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/df41f2ca-a258-44e2-bc9e-5fa8803f1cf0)
+Next, we will add non-administrative users to remotely log in and gain access on other computers. Right-click on "Windows" --> click on System --> Select "Remote Desktop", --> click on "Add", type in "domain users", and click on "Check Names" --> Select "OK". Next, toggle back to DC as "Jane Doe" login
 
 
-Going back to RDT type in "ping -t 10.0.0.5" this will start an unstopping ping but the request should be timed out due to us blocking the incoming icmp traffic.
+<h1> Create Additional Users </h1>
 
+![20 169 104 33 - Remote Desktop Connection 1_11_2024 5_11_30 PM](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/f67ca4e2-f2f6-4230-8008-9a2e83753045)
 
-![Screenshot (184)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/e4977b91-637f-4faf-977e-e8d623c444a9)
 
-Next we go back to home computer screen and go back to VM2's network settings and we allow imbound ICMP traffic
+After logging into Dc, open and run Powershell ISE as an administrator. Copy and paste created script to create additional users in the employees file under Active Directory. After pasting the script, select "RUN" (green play notification) to start the creation of users. Also, the powershell script will create a number of random user names and that will use the login credential of any password that is set.
 
 
-![Screenshot (185)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/271d446c-2394-4158-979c-0223a680e0b2)
+<h1> Logging in as a User </h1>
 
+![20 150 223 237 - Remote Desktop Connection 1_11_2024 5_17_07 PM](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/e254de3b-6a2d-48c6-9224-b260f10bcbeb)
 
-And to verify this we will go back to RDT and notice the traffic in wireshark
 
-![Screenshot (186)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/c5cb1ae4-224a-4f33-a3da-61b375b76eac)
+After the additional names are created, we can login as a user and verify that the client computer provides access to non-administrative users.
+Once this has been verified, Congratulations !! You have successfully set up and administer Active Directory and Set up ou, groups and users. 
 
 
 
-![Screenshot (187)](https://github.com/JoshuaMoorecc/configure-ad-/assets/154629831/2b484e8f-1de0-4802-a48e-e1cfa414752a)
 
 
 
