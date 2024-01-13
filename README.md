@@ -165,7 +165,7 @@ After logging into Dc, open and run Powershell ISE as an administrator. Copy and
 
 
 After the additional names are created, we can login as a user and verify that the client computer provides access to non-administrative users.
-Once this has been verified, Congratulations !! You have successfully set up and administer Active Directory and Set up ou, groups and users. 
+Once this has been verified, Congratulations !! You have successfully set up and administered Active Directory and set up ou, groups and users. 
 
 
 
